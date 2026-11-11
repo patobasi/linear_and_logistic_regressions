@@ -1,10 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import matplotlib.colors as mcolors
 import statsmodels.api as sm
-from adjustText import adjust_text
 from sklearn.metrics import confusion_matrix, accuracy_score, ConfusionMatrixDisplay
+import seaborn as sns
 
 """
 a) Produce some numerical and graphical summaries of the Weekly data. Do there
@@ -24,6 +23,53 @@ fraction of correct predictions for the held-out data (that is, the data from 20
 print("\n Part A")
 
 df = pd.read_csv("Smarket.csv")
+
+# Basic numerical summary
+print(df.describe())
+
+# Counts of Up and Down
+print(df['Direction'].value_counts())
+
+# Correlations between numerical variables
+print(df.corr(numeric_only=True))
+
+# Histograms of numerical variables
+df.hist(figsize=(12, 10))
+plt.tight_layout()
+plt.show()
+
+# Correlation heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm',
+            center=0)
+plt.title('Correlation Matrix')
+plt.show()
+
+# Volume over time
+# Find the maximum trading volume for each year
+yearly_max = df.groupby('Year')['Volume'].max()
+
+# Create figure and axes
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# Original scatter plot
+ax.scatter(df['Year'], df['Volume'], alpha=0.5, label='Weekly Volume')
+
+# Overlay line connecting the yearly maximum volumes
+ax.plot(yearly_max.index, yearly_max.values,
+        color='red', marker='o', linewidth=2,
+        label='Maximum Volume Each Year')
+
+# Labels and title
+ax.set_xlabel('Year')
+ax.set_ylabel('Volume')
+ax.set_title('Weekly Trading Volume Over Time')
+ax.legend()
+ax.grid(alpha=0.3)
+plt.savefig("HW3_Q2_PartA.svg")
+plt.show()
+
+
 
 column_list = df.columns.tolist()
 
