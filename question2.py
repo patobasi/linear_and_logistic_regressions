@@ -33,18 +33,6 @@ print(df['Direction'].value_counts())
 # Correlations between numerical variables
 print(df.corr(numeric_only=True))
 
-# Histograms of numerical variables
-df.hist(figsize=(12, 10))
-plt.tight_layout()
-plt.show()
-
-# Correlation heatmap
-plt.figure(figsize=(10, 8))
-sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm',
-            center=0)
-plt.title('Correlation Matrix')
-plt.show()
-
 # Volume over time
 # Find the maximum trading volume for each year
 yearly_max = df.groupby('Year')['Volume'].max()
