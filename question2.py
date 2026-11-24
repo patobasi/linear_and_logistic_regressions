@@ -104,3 +104,43 @@ plt.savefig("HW3_CM.svg")
 
 plt.show()
 
+
+"""80/20 split, lag2 only"""
+# Splitting data
+train = df[df['Year'] <= 2004]
+test = df[df['Year'] == 2005]
+
+# Lag2 predictor
+X_train = sm.add_constant(train[['Lag2']])
+y_train = train['Direction']
+
+# Fit logistic regression
+model_d = sm.Logit(y_train, X_train).fit()
+
+print(model_d.summary())
+
+# Prepare test data
+X_test = sm.add_constant(test[['Lag2']])
+y_test = test['Direction']
+
+# Predict directions
+probabilities = model_d.predict(X_test)
+predictions = (probabilities >= 0.5).astype(int)
+
+# Confusion matrix and accuracy
+cm = confusion_matrix(y_test, predictions, labels=[0, 1])
+print("Confusion Matrix:")
+print(cm)
+
+accuracy = accuracy_score(y_test, predictions)
+print("Accuracy:", accuracy)
+
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm, display_labels=class_names)
+disp.plot(cmap=plt.cm.Blues)
+
+plt.title('Confusion Matrix')
+
+plt.savefig("HW3_CM2.svg")
+
+plt.show()
